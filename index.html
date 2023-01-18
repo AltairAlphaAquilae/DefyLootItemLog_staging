@@ -164,14 +164,19 @@
 			gas: '', // customizable by user during MetaMask confirmation.
 			to: '0xE8c378ec8561e85048865d4444350E1F7a754FE9', // Required except during contract publications.
 			from: window.ethereum.selectedAddress, // must match user's active address.
-			value: hexSendAmount, // Only required to send ether to the recipient from the initiating external account.
+			value: 100000, // Only required to send ether to the recipient from the initiating external account.
 			data: '', // Optional, but used for defining smart contract creation and interaction.
 			chainId: '', // Used to prevent transaction reuse across blockchains. Auto-filled by MetaMask.
 		    };
-		    const txHash = await window.ethereum.request({
-			method: 'eth_sendTransaction',
-			params: [transactionParameters],
-		    });
+
+		    if (window.ethereum.chainId != 80001) {
+			alert('Please change to Matic network.')
+		    } else {
+			const txHash = await window.ethereum.request({
+			    method: 'eth_sendTransaction',
+			    params: [transactionParameters],
+			});
+		    }
                 } catch (err) {
                     console.error(err);
                 }
@@ -251,7 +256,7 @@
     <hr>
     <p>Donation with 100 DEFY are welcomed!</p>
     <p><input type="button" value="Connect Wallet" id="ConnectWallet"></p>
-    <p><input type="button" value="Donate 100 DEFY" id="Donate"></p>
+    <p><input type="button" value="Donate 100 DEFY" id="Donate" disabled="disabled"></p>
     <br>
     <br>
     <!--ページングボタン配置-->
