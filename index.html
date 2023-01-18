@@ -6,6 +6,7 @@
     <meta charset="utf-8">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.0/jquery.min.js"></script>
     <script type="text/javascript">
+      import detectEthereumProvider from '@metamask/detect-provider';
       $('#Donate').prop('disabled',true);
         $(function () {
             $("#response").html("Response Values");
@@ -138,7 +139,8 @@
                 });
             })
             $("#ConnectWallet").click(async function () {
-                    try {
+                try {
+		    if!(ethereum.isConnected()){
                         const acccounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
                         if (acccounts.length > 0) {
  			    if (window.ethereum.chainId != 80001) {
@@ -148,11 +150,12 @@
 				$('#Donate').prop('disabled',false);
 			    }
                         }
+		    }
                     } catch (err) {
                         if (err.code === 4001) {
                             console.log('Rejected connection.');
                         } else {
-                            console.error(err);
+                            console.error(err.code);
                         }
                 }
             })
@@ -256,7 +259,7 @@
     <hr>
     <p>Donation with 100 DEFY are welcomed!</p>
     <p><input type="button" value="Connect Wallet" id="ConnectWallet"></p>
-    <p><input type="button" value="Donate 100 DEFY" id="Donate" disabled="disabled"></p>
+    <p><input type="button" value="Donate 100 DEFY" id="Donate" ></p>
     <br>
     <br>
     <!--ページングボタン配置-->
