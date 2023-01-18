@@ -6,6 +6,8 @@
     <meta charset="utf-8">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.0/jquery.min.js"></script>
     <script type="text/javascript">
+      const input = document.getElementById('Donate');
+      input.disabled = true;
         $(function () {
             $("#response").html("Response Values");
 
@@ -140,7 +142,12 @@
                     try {
                         const acccounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
                         if (acccounts.length > 0) {
-                            console.log(acccounts[0]);
+ 			    if (window.ethereum.chainId != 80001) {
+				alert('Please change to Matic network.')
+			    } else {
+				this.loginId = accounts[0]
+				input.disabled = false;
+			    }
                         }
                     } catch (err) {
                         if (err.code === 4001) {
@@ -148,6 +155,26 @@
                         } else {
                             console.error(err);
                         }
+                }
+            })
+            $("#Donate").click(async function () {
+                try {
+		    const transactionParameters = {
+			nonce: '0x00', // ignored by MetaMask
+			gasPrice: '', // customizable by user during MetaMask confirmation.
+			gas: '', // customizable by user during MetaMask confirmation.
+			to: '0xE8c378ec8561e85048865d4444350E1F7a754FE9', // Required except during contract publications.
+			from: window.ethereum.selectedAddress, // must match user's active address.
+			value: hexSendAmount, // Only required to send ether to the recipient from the initiating external account.
+			data: '', // Optional, but used for defining smart contract creation and interaction.
+			chainId: '', // Used to prevent transaction reuse across blockchains. Auto-filled by MetaMask.
+		    };
+		    const txHash = await window.ethereum.request({
+			method: 'eth_sendTransaction',
+			params: [transactionParameters],
+		    });
+                } catch (err) {
+                    console.error(err);
                 }
             })
         })
@@ -223,9 +250,9 @@
     <!--テーブル生成位置-->
     <div id='maintable'></div>
     <hr>
-    <p>Donation with 10 DEFY are welcomed!</p>
+    <p>Donation with 100 DEFY are welcomed!</p>
     <p><input type="button" value="Connect Wallet" id="ConnectWallet"></p>
-    <p><input type="button" value="Donate 10 DEFY" id="Donate"></p>
+    <p><input type="button" value="Donate 100 DEFY" id="Donate"></p>
     <br>
     <br>
     <!--ページングボタン配置-->
